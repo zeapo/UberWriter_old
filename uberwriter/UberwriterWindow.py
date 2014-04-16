@@ -734,7 +734,11 @@ class UberwriterWindow(Window):
             # uri target
             uris = data.get_uris()
             for uri in uris:
-                uri = urllib.unquote_plus(uri)
+                try: #python2
+                    uri = urllib.unquote_plus(uri)
+                except AttributeError: #python3 way
+                    uri = urllib.parse.unquote_plus(uri)
+
                 mime = mimetypes.guess_type(uri)
 
                 if mime[0] is not None and mime[0].startswith('image'):
@@ -801,23 +805,30 @@ class UberwriterWindow(Window):
         if filename:
             if filename.startswith('file://'):
                 filename = filename[7:]
-            filename = urllib.unquote_plus(filename)
+
+            try: #python2
+                filename = urllib.unquote_plus(filename)
+            except AttributeError: #python3 way
+                filename = urllib.parse.unquote_plus(filename)
+
             self.filename = filename
             try:                
 
                 # f = codecs.open(filename, encoding="utf-8", mode='r')
 
-                # read the file in text mode with encoding
-                with open(filename, mode='r', encoding="utf-8") as f:
-                    self.TextBuffer.set_text(f.read())
+                # for python2 compatibility, read the file in binary and decode later
+                with open(filename, mode='rb') as f:
+                    self.TextBuffer.set_text(f.read().decode("utf-8"))
 
                 self.MarkupBuffer.markup_buffer(0)
                 self.set_title(os.path.basename(filename) + self.title_end)
                 self.TextEditor.undos = []
                 self.TextEditor.redos = []
             
-            except:
+            except Exception as e:
                 logger.warning("Error Reading File")
+                logger.warning(e)
+
             self.did_change = False
         else:
             logger.warning("No File arg")
