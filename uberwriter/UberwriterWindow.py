@@ -566,7 +566,7 @@ class UberwriterWindow(Window):
                 dialog = Gtk.MessageDialog(self,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     Gtk.MessageType.INFO,
-                    None, 
+                    Gtk.ButtonsType.NONE,
                     _("You can not export to PDF.")
                 )
                 dialog.format_secondary_markup(_("Please install texlive from the software center."))
@@ -621,7 +621,7 @@ class UberwriterWindow(Window):
             dialog = Gtk.MessageDialog(self,
                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                 Gtk.MessageType.WARNING,
-                None, 
+                Gtk.ButtonsType.NONE, 
                 _("You have not saved your changes.")
                 )
             dialog.add_button(_("Close without Saving"), Gtk.ResponseType.NO)
@@ -683,7 +683,7 @@ class UberwriterWindow(Window):
                 dialog = Gtk.MessageDialog(self,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     Gtk.MessageType.INFO,
-                    None, 
+                    Gtk.ButtonsType.NONE,
                     _("You can not enable the Spell Checker.")
                 )
                 dialog.format_secondary_text(_("Please install 'hunspell' or 'aspell' dictionarys for your language from the software center."))
