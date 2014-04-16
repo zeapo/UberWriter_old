@@ -1,16 +1,26 @@
 UberWriter
 ==========
 
-UberWriter (with debian in mind)
+UberWriter (with*out* debian in mind)
 
-Still working on getting UberWriter to work with Python 3 as it was intended to.
-Initial build was with the help of Wolf Vollprecht (UberWriter creator).
+# Python3 #
+The editor is more and more python3 compliant, using `with` statements, assuming good unicode. Removing deprecated methods (PEP400).
 
-Instructions:
+# Python2 #
+Trying to keep backward compatibility here. People should move to python3...
+
+# Debian? #
+Managed to make the code work on *ArchLinux*, and that's what I'm using actually.
+
+## Issues ##
+I don't know if it's related to my installation, have to check but the theme is not perfect.
+
+# Instructions #
 - python3 bin/uberwriter
 
 Requirements (SEVERELY INCOMPLETE):
 - via apt-get:
-	`
-	sudo apt-get install python3-gi python3-gi-cairo pandoc texlive python3-enchant python3-apt python3-cairo
-	`
+
+		sudo apt-get install python3-gi python3-gi-cairo pandoc texlive python3-enchant python3-apt python3-cairo
+
+> Readme written using UberWriter on *ArchLinux* o/
