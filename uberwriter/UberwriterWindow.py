@@ -168,9 +168,14 @@ class UberwriterWindow(Window):
         self.char_count.set_text(str(self.TextBuffer.get_char_count() - 
                 (2 * self.fflines)))
 
-        text = self.get_text().encode("utf-8")
-        #text = unicode(text)
-        text = text.decode("utf-8")
+        text = self.get_text()
+
+        try:
+            text = unicode(text, "utf-8").encode("utf-8").decode("utf-8")
+        except:
+            # well is this unfortunate? nah, good, we are in Python3 here!
+            pass
+
         words = re.split(self.WORDCOUNT, text)
         length = len(words)
         # Last word a "space"
@@ -389,10 +394,14 @@ class UberwriterWindow(Window):
 
             # Codecs have been deprecated http://bugs.python.org/issue8796
             # f = codecs.open(filename, encoding="utf-8", mode='w')
+            try:
+                text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
+            except:
+                text = self.get_text()
 
             # use python3 with-statement
             with open(filename, "wb") as f:
-                f.write(self.get_text().encode("utf-8"))
+                f.write(text.encode("utf-8"))
 
             if self.did_change:
                 self.did_change = False
@@ -430,9 +439,17 @@ class UberwriterWindow(Window):
                 # Codecs have been deprecated http://bugs.python.org/issue8796
                 # f = codecs.open(filename, encoding="utf-8", mode='w')
 
+                # use unicode() for Python2 compatibility
+                # why no codecs you say? the future of Python depends on taking off
+                # deprecated old python2 stuffs 
+                try:
+                    text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
+                except:
+                    text = self.get_text()
+
                 # use python3 with-statement
                 with open(filename, "wb") as f:
-                    f.write(self.get_text().encode("utf-8"))
+                    f.write(text.encode("utf-8"))
                 
                 self.filename = filename
                 self.set_title(os.path.basename(filename) + self.title_end)
@@ -470,9 +487,14 @@ class UberwriterWindow(Window):
             # Codecs have been deprecated http://bugs.python.org/issue8796
             # f = codecs.open(filename, encoding="utf-8", mode='w')
 
+            try:
+                text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
+            except:
+                text = self.get_text()
+
             # use python3 with-statement
             with open(filename, "wb") as f:
-                f.write(self.get_text().encode("utf-8"))
+                f.write(text.encode("utf-8"))
             
             self.filename = filename
             self.set_title(os.path.basename(filename) + self.title_end)
