@@ -19,7 +19,6 @@ import subprocess
 import os
 import codecs
 import webbrowser
-import apt
 import urllib
 
 from locale import gettext as _
@@ -533,11 +532,35 @@ class UberwriterWindow(Window):
 
     def export_as_pdf(self, widget, data=None):
         if self.texlive_installed == False:
+
+            debian_like = True
+
             try:
-                cache = apt.Cache()
-                inst = cache["texlive"].is_installed
+                import apt
             except:
-                inst = True
+                debian_like = False
+                
+            if debian_like :
+                try:
+                    cache = apt.Cache()
+                    inst = cache["texlive"].is_installed
+                except:
+                    inst = True
+            else:
+                inst = False
+
+                # replaces the apt check for non-apt distros
+                fpath, fname = os.path.split('latex')
+                if fpath:
+                    if is_exe('latex'):
+                        inst = True
+                else:
+                    for path in os.environ["PATH"].split(os.pathsep):
+                        path = path.strip('"')
+                        exe_file = os.path.join(path, 'latex')
+                        if os.path.isfile(fpath) and os.access(fpath, os.X_OK):
+                            inst = True
+
 
             if inst == False:
                 dialog = Gtk.MessageDialog(self,
