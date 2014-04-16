@@ -17,9 +17,12 @@
 import locale
 import subprocess
 import os
-import codecs
 import webbrowser
 import urllib
+
+# using codecs.open() has been deprecated in Python3, see :
+# http://legacy.python.org/dev/peps/pep-0400/#keep-the-public-api-codecs-open
+# import codecs
 
 from locale import gettext as _
 locale.textdomain('uberwriter')
@@ -383,9 +386,14 @@ class UberwriterWindow(Window):
         if self.filename:
             logger.info("saving")
             filename = self.filename
-            f = codecs.open(filename, encoding="utf-8", mode='w')
-            f.write(self.get_text().decode("utf-8") )
-            f.close()
+
+            # Codecs have been deprecated http://bugs.python.org/issue8796
+            # f = codecs.open(filename, encoding="utf-8", mode='w')
+
+            # use python3 with-statement
+            with open(filename, "wb") as f:
+                f.write(self.get_text().encode("utf-8"))
+
             if self.did_change:
                 self.did_change = False
                 title = self.get_title()
@@ -419,10 +427,12 @@ class UberwriterWindow(Window):
                     except:
                         pass
 
-                f = codecs.open(filename, encoding="utf-8", mode='w')
+                # Codecs have been deprecated http://bugs.python.org/issue8796
+                # f = codecs.open(filename, encoding="utf-8", mode='w')
 
-                f.write(self.get_text().decode("utf-8") )
-                f.close()
+                # use python3 with-statement
+                with open(filename, "wb") as f:
+                    f.write(self.get_text().encode("utf-8"))
                 
                 self.filename = filename
                 self.set_title(os.path.basename(filename) + self.title_end)
@@ -457,9 +467,12 @@ class UberwriterWindow(Window):
                 except: 
                     pass
 
-            f = codecs.open(filename, encoding="utf-8", mode='w')
-            f.write(self.get_text().decode("utf-8") )
-            f.close()
+            # Codecs have been deprecated http://bugs.python.org/issue8796
+            # f = codecs.open(filename, encoding="utf-8", mode='w')
+
+            # use python3 with-statement
+            with open(filename, "wb") as f:
+                f.write(self.get_text().encode("utf-8"))
             
             self.filename = filename
             self.set_title(os.path.basename(filename) + self.title_end)
@@ -769,9 +782,13 @@ class UberwriterWindow(Window):
             filename = urllib.unquote_plus(filename)
             self.filename = filename
             try:                
-                f = codecs.open(filename, encoding="utf-8", mode='r')
-                self.TextBuffer.set_text(f.read())
-                f.close()
+
+                # f = codecs.open(filename, encoding="utf-8", mode='r')
+
+                # read the file in text mode with encoding
+                with open(filename, mode='r', encoding="utf-8") as f:
+                    self.TextBuffer.set_text(f.read())
+
                 self.MarkupBuffer.markup_buffer(0)
                 self.set_title(os.path.basename(filename) + self.title_end)
                 self.TextEditor.undos = []
