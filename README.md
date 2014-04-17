@@ -9,7 +9,7 @@ The editor is more and more python3 compliant, using `with` statements, assuming
 Trying to keep backward compatibility here. People should move to python3...
 
 ## Debian? ##
-Managed to make the code work on *ArchLinux*, and that's what I'm using actually.
+Managed to make the code work on *ArchLinux* and *Fedora*. Checking for `TexLive` supports both `apt` package and classical `which`-like search for a `latex` binary.
 
 ## Issues ##
 I don't know if it's related to my installation, have to check but the theme is not perfect.
