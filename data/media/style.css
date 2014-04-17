@@ -75,7 +75,7 @@
 #UberwriterWindow GtkTextView {
   
   border: none;
-  -GtkWidget-cursor-color: shade(@selected_bg_color, 0.9);
+  -GtkWidget-cursor-color: shade(orange, 0.9);
   -GtkWidget-cursor-aspect-ratio: 0.05;
   background: transparent ;
   color: #222;
@@ -88,8 +88,8 @@
 }
 
 #UberwriterWindow GtkTextView:selected {
-  background-color: @selected_bg_color;
-  color: @selected_fg_color;
+  background-color: orange;
+  color: white;
 }
 
 
