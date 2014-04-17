@@ -20,10 +20,6 @@ import os
 import webbrowser
 import urllib
 
-# using codecs.open() has been deprecated in Python3, see :
-# http://legacy.python.org/dev/peps/pep-0400/#keep-the-public-api-codecs-open
-# import codecs
-
 from locale import gettext as _
 locale.textdomain('uberwriter')
 
@@ -169,12 +165,6 @@ class UberwriterWindow(Window):
                 (2 * self.fflines)))
 
         text = self.get_text()
-
-        try:
-            text = unicode(text, "utf-8").encode("utf-8").decode("utf-8")
-        except:
-            # well is this unfortunate? nah, good, we are in Python3 here!
-            pass
 
         words = re.split(self.WORDCOUNT, text)
         length = len(words)
@@ -392,16 +382,8 @@ class UberwriterWindow(Window):
             logger.info("saving")
             filename = self.filename
 
-            # Codecs have been deprecated http://bugs.python.org/issue8796
-            # f = codecs.open(filename, encoding="utf-8", mode='w')
-            try:
-                text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
-            except:
-                text = self.get_text()
-
-            # use python3 with-statement
             with open(filename, "wb") as f:
-                f.write(text.encode("utf-8"))
+                f.write(self.get_text().encode("utf-8"))
 
             if self.did_change:
                 self.did_change = False
@@ -436,18 +418,8 @@ class UberwriterWindow(Window):
                     except:
                         pass
 
-                # Codecs have been deprecated http://bugs.python.org/issue8796
-                # f = codecs.open(filename, encoding="utf-8", mode='w')
+                text = self.get_text()
 
-                # use unicode() for Python2 compatibility
-                # why no codecs you say? the future of Python depends on taking off
-                # deprecated old python2 stuffs 
-                try:
-                    text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
-                except:
-                    text = self.get_text()
-
-                # use python3 with-statement
                 with open(filename, "wb") as f:
                     f.write(text.encode("utf-8"))
                 
@@ -486,11 +458,7 @@ class UberwriterWindow(Window):
 
             # Codecs have been deprecated http://bugs.python.org/issue8796
             # f = codecs.open(filename, encoding="utf-8", mode='w')
-
-            try:
-                text = unicode(self.get_text(), "utf-8").encode("utf-8").decode("utf-8")
-            except:
-                text = self.get_text()
+            text = self.get_text()
 
             # use python3 with-statement
             with open(filename, "wb") as f:
@@ -733,10 +701,7 @@ class UberwriterWindow(Window):
             # uri target
             uris = data.get_uris()
             for uri in uris:
-                try: #python2
-                    uri = urllib.unquote_plus(uri)
-                except AttributeError: #python3 way
-                    uri = urllib.parse.unquote_plus(uri)
+                uri = urllib.parse.unquote_plus(uri)
 
                 mime = mimetypes.guess_type(uri)
 
@@ -805,19 +770,13 @@ class UberwriterWindow(Window):
             if filename.startswith('file://'):
                 filename = filename[7:]
 
-            try: #python2
-                filename = urllib.unquote_plus(filename)
-            except AttributeError: #python3 way
-                filename = urllib.parse.unquote_plus(filename)
+            filename = urllib.parse.unquote_plus(filename)
 
             self.filename = filename
             try:                
 
-                # f = codecs.open(filename, encoding="utf-8", mode='r')
-
-                # for python2 compatibility, read the file in binary and decode later
-                with open(filename, mode='rb') as f:
-                    self.TextBuffer.set_text(f.read().decode("utf-8"))
+                with open(filename, mode='r', encoding='utf-8') as f:
+                    self.TextBuffer.set_text(f.read())
 
                 self.MarkupBuffer.markup_buffer(0)
                 self.set_title(os.path.basename(filename) + self.title_end)
