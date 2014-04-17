@@ -533,8 +533,7 @@ class UberwriterWindow(Window):
             filechooser.destroy()
             return 
 
-        text = self.get_text()
-        text = text.encode("utf-8")
+        text = self.get_text().encode("utf-8")
                 
         output_dir = os.path.abspath(os.path.join(filename, os.path.pardir))
         
@@ -591,9 +590,9 @@ class UberwriterWindow(Window):
                         inst = True
                 else:
                     for path in os.environ["PATH"].split(os.pathsep):
-                        path = path.strip('"')
+                        path = path.strip('"').strip()
                         exe_file = os.path.join(path, 'latex')
-                        if os.path.isfile(fpath) and os.access(fpath, os.X_OK):
+                        if os.path.isfile(exe_file) and os.access(exe_file, os.X_OK):
                             inst = True
 
 
@@ -618,11 +617,11 @@ class UberwriterWindow(Window):
         args = ['pandoc', '--from=markdown', '--smart', '-thtml']
         p = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         
-        text = self.get_text()
+        text = self.get_text().encode("utf-8")
         output = p.communicate(text)[0]
                 
         cb = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        cb.set_text(output, -1)
+        cb.set_text(output.decode("utf-8"), -1)
         cb.store()
 
     def open_document(self, widget):
