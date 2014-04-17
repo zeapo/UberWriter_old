@@ -102,7 +102,7 @@ class MarkupBuffer():
         self.table_env.set_property('wrap-mode', Gtk.WrapMode.NONE)
 
     regex  = {
-        "ITALIC": re.compile(r"\*\w(.+?)\*| _\w(.+?)_ ", re.UNICODE),     # *asdasd* // _asdasd asd asd_ 
+        "ITALIC": re.compile(r"(?<!\*)\*(?!\*)([^\*]+)\*(?!\*)|(?<!_)_(?!_)([^_]+)_(?!_)", re.UNICODE),     # *asdasd* // _asdasd asd asd_ 
         "STRONG": re.compile(r"\*{2}\w(.+?)\*{2}| [_]{2}\w(.+?)[_]{2} ", re.UNICODE),     # **as das** // __asdasdasd asd ad a__
         "STRONGITALIC": re.compile(r"\*{3}\w(.+?)\*{3}| [_]{3}\w(.+?)[_]{3} "),
         "BLOCKQUOTE": re.compile(r"^([\>]+ )", re.MULTILINE),
